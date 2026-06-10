@@ -14,22 +14,22 @@ services:
     container_name: laravel_app
 
     # コンテナ内の作業ディレクトリ
-    working_dir: /var/www
+    working_dir: /var/www/src
 
-    # フォルダ共有
+    # PJ全体を /var/www に共有する
     #
     # 左側  = ローカルPC側
     # 右側  = Docker側
     #
-    # src配下の変更が即反映される
+    # . = Docker、Git、Laravel全部入ってるPJルート
+    # src配下=Laravelソースコード 
+    # PJフォルダ全体でDocker+LaravelをGit管理しているため、srcだけでなくPJフォルダ全体を共有する
     volumes:
-      - ./src:/var/www
+      - .:/var/www
 
     # dbコンテナ起動後にapp起動
     depends_on:
       - db
-
-
 
   # ==========================================
   # Webサーバー(Nginx)
@@ -53,15 +53,15 @@ services:
     volumes:
 
       # Laravelソース共有
-      - ./src:/var/www
+      # PJ全体を /var/www に共有する
+      # appと同じ設定にする：public配下のファイルを探してappへ渡すため
+      - .:/var/www
 
       # nginx設定読み込み
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
 
     depends_on:
       - app
-
-
 
   # ==========================================
   # MySQL
