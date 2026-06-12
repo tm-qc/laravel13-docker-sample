@@ -6,6 +6,7 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
     plugins: [
         laravel({
+            // ビルド対象のファイルを指定
             input: ['resources/css/app.css', 'resources/js/app.js'],
             refresh: true,
             fonts: [
