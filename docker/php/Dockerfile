@@ -61,7 +61,21 @@ RUN docker-php-ext-install \
     mbstring \
     bcmath
 
-
+# ==========================================
+# Xdebug導入
+# ==========================================
+#
+# Xdebug
+#   VS Codeなどからブレイクポイントデバッグするために利用
+#
+# pecl install xdebug
+#   PHP拡張としてXdebugをインストール
+#
+# docker-php-ext-enable xdebug
+#   PHPでXdebugを有効化
+#
+RUN pecl install xdebug \
+    && docker-php-ext-enable xdebug
 
 # ==========================================
 # Composer導入
@@ -72,7 +86,13 @@ RUN docker-php-ext-install \
 #
 COPY --from=composer:2.10.1 /usr/bin/composer /usr/bin/composer
 
-
+# ==========================================
+# Xdebug設定ファイルコピー
+# ==========================================
+#
+# Xdebugの接続先、ポートなどをPHP設定として読み込む
+#
+COPY ./docker/php/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
 # ==========================================
 # 作業フォルダ

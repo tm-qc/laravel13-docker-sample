@@ -1,0 +1,18 @@
+// PJ直下の.vscode配下に置かないと動きません。
+{
+    "version": "0.2.0", // VS Codeのデバッグ設定ファイルのバージョン。基本変更不要
+    "configurations": [
+        {
+            "name": "Xdebug", // VS Code画面に表示される名前
+            "type": "php", // PHPデバッグであることを示し、PHP Debug拡張が利用される
+            "request": "launch", // VS Codeが待受を開始し待機しておく設定
+            "port": 9003, // Xdebug3標準ポート。ここで待ち受ける。docker/php/xdebug.iniのxdebug.client_port=9003と一致させる
+            // Xdebugでコンテナ内のブレイクポイントなど、デバッグ情報を通知し、それをVS CODEに送るためにPathをマッピングする設定
+            "pathMappings": {
+                // コンテナ内のLaravelのルートとVS CODEのLaravelのルートを紐づける
+                // ${workspaceFolder} = VS CODEの設定変数でPJファイルのルートパスが入る
+                "/var/www/src": "${workspaceFolder}/src"
+            }
+        }
+    ]
+}
