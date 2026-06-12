@@ -1,0 +1,39 @@
+/* ユーザー画面系のCSS */
+
+/* users.create */
+.user-form {
+    display: grid;
+    gap: 20px;
+}
+
+.form-group {
+    display: grid;
+    gap: 8px;
+}
+
+.form-label {
+    font-weight: 700;
+}
+
+.form-control {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    font-size: 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+}
+
+.form-control:focus {
+    border-color: #2563eb;
+    outline: none;
+    box-shadow: 0 0 0 3px rgb(37 99 235 / 15%);
+}
+
+/* users.edit */
+
+
+/* users.show */
+
+
+/* users.index */
