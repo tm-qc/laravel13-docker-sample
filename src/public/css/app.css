@@ -1,0 +1,124 @@
+/*
+src/public について
+
+ブラウザから直接読み込む共通CSS
+Node.jsを使わないため public 配下に配置
+
+src/resources 配下について
+
+Laravel Mixでビルドしてpublic/css/app.cssに出力されるので、コンパイル前のファイルを置く
+*/
+
+
+/* =========================
+   共通レイアウト
+========================= */
+
+body {
+    margin: 0;
+    background-color: #f3f4f6;
+    color: #111827;
+    font-family: Arial, "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+}
+
+.page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.site-header {
+    background-color: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.site-header-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.site-logo {
+    color: #111827;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.site-nav {
+    display: flex;
+    gap: 16px;
+}
+
+.site-nav a {
+    color: #2563eb;
+    text-decoration: none;
+}
+
+.site-nav a:hover {
+    text-decoration: underline;
+}
+
+.site-footer {
+    padding: 24px;
+    color: #6b7280;
+    text-align: center;
+}
+
+.page-title {
+    margin: 0 0 24px;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.form-card,
+.menu-card {
+    padding: 32px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgb(0 0 0 / 8%);
+}
+
+.button-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 140px;
+    padding: 12px 24px;
+
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+
+    background: linear-gradient(135deg,
+            #3b82f6,
+            #2563eb);
+
+    border: none;
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s,
+        background 0.2s;
+
+    box-shadow:
+        0 4px 12px rgb(37 99 235 / 25%);
+}
+
+.button-primary:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 20px rgb(37 99 235 / 35%);
+}
+
+.button-primary:active {
+    transform: translateY(0);
+}
