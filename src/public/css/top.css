@@ -1,0 +1,34 @@
+/* =========================
+   TOP画面
+========================= */
+
+.top-menu-list {
+    display: grid;
+    gap: 16px;
+}
+
+.top-menu-item {
+    display: block;
+    padding: 20px;
+    color: #111827;
+    text-decoration: none;
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    transition: 0.2s;
+}
+
+.top-menu-item:hover {
+    background-color: #eff6ff;
+    border-color: #2563eb;
+}
+
+.top-menu-item h2 {
+    margin: 0 0 8px;
+    font-size: 20px;
+}
+
+.top-menu-item p {
+    margin: 0;
+    color: #6b7280;
+}
