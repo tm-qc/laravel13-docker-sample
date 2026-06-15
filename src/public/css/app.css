@@ -122,3 +122,13 @@ body {
 .button-primary:active {
     transform: translateY(0);
 }
+
+.form-error {
+    margin-top: 0px;
+    color: #dc3545;
+    font-size: 0.875rem;
+}
+
+.is-invalid {
+    border-color: #dc3545;
+}
