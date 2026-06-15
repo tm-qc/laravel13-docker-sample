@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserStoreRequest;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -25,8 +26,11 @@ class UserController extends Controller
     /**
      * 新規登録する
      */
-    public function store(Request $request)
+    public function store(UserStoreRequest $request)
     {
+        // フォームリクエストからバリデーション済みデータを取得
+        $validated = $request->validated();
+
         //
     }
 
