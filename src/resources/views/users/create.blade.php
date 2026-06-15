@@ -62,11 +62,7 @@
 
             <div class="form-group">
                 <label for="password_confirmation" class="form-label">パスワード確認</label>
-                <input type="password" id="password_confirmation" name="password_confirmation"
-                    class="form-control @error('password_confirmation') is-invalid @enderror">
-                @error('password_confirmation')
-                    <p class="form-error">{{ $message }}</p>
-                @enderror
+                <input type="password" id="password_confirmation" name="password_confirmation" class="form-control">
             </div>
 
             <div class="form-group">
