@@ -14,6 +14,7 @@
 
         @if (session('success'))
             <div class="alert-success">
+                <span>✓</span>
                 {{ session('success') }}
             </div>
         @endif
