@@ -38,17 +38,37 @@ class UserStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', 'confirmed', 'min:8'],
-            // TODO:まだテーブルにアイコン、プロフィールはカラム追加してないのであとで
-            // 'profile' => ['nullable'],
-            // 'icon_image' => [
-            //     'nullable',
-            //     'image',
-            //     'mimes:jpg,jpeg,png,webp',
-            //     'max:2048',
-            // ],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'password' => ['required', 'string', 'confirmed', 'min:8'],
+            'profile' => ['string', 'max:500'],
+            'icon_image' => [
+                'nullable', // 画像未選択の場合はnull扱いになるためnullableを付与
+                'image',
+                'mimes:jpg,jpeg,png,webp',
+                'max:2048',
+            ],
         ];
+    }
+
+    /**
+     * バリデーション前に入力値を整える
+     */
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            /**
+             * null→空文字変換
+             *
+             * profileは任意入力だが、アプリ内では null ではなく空文字で統一する。
+             * ここで必ず profile キーを作ることで、 ControllerやServiceで登録する場合の空文字変換を不要にできる
+             *
+             * 例）
+             * 'profile' => $validated['profile'] ?? '',
+             * ↓
+             * 'profile' => $validated['profile'],
+            */
+            'profile' => $this->input('profile') ?? '',
+        ]);
     }
 }
