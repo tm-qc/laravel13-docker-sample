@@ -147,6 +147,7 @@ body {
     font-size: 14px;
     font-weight: 600;
 }
+
 /* エラーメッセージ */
 .alert-error {
     margin-bottom: 20px;
@@ -159,4 +160,48 @@ body {
 
     font-size: 14px;
     font-weight: 600;
+}
+
+/* ==============================
+   共通ページネーション
+   ※Laravel標準の links() は Tailwind CSS 前提のため、
+     このPJでは自前CSSで表示を整える
+============================== */
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-top: 32px;
+}
+
+.pagination__link,
+.pagination__disabled,
+.pagination__current {
+    display: inline-block;
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 14px;
+}
+
+.pagination__link {
+    background: #2563eb;
+    color: #fff;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.pagination__link:hover {
+    opacity: 0.85;
+}
+
+.pagination__disabled {
+    background: #e5e7eb;
+    color: #999;
+}
+
+.pagination__current {
+    color: #333;
+    font-weight: bold;
 }
