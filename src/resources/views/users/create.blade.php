@@ -19,6 +19,13 @@
             </div>
         @endif
 
+        @if (session('error'))
+            <div class="alert-error">
+                <span>×</span>
+                {{ session('error') }}
+            </div>
+        @endif
+
         <form action="{{ route('users.store') }}" method="post" enctype="multipart/form-data" class="user-form">
             @csrf
 
@@ -46,7 +53,7 @@
             <div class="form-group">
                 <label for="email" class="form-label">メールアドレス</label>
                 <input type="email" id="email" name="email"
-                    class="form-control  @error('password') is-invalid @enderror" value="{{ old('email') }}">
+                    class="form-control  @error('email') is-invalid @enderror" value="{{ old('email') }}">
                 @error('email')
                     <p class="form-error">{{ $message }}</p>
                 @enderror
