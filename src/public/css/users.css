@@ -1,6 +1,166 @@
 /* ユーザー画面系のCSS */
 
-/* users.create */
+/* ==============================
+   ユーザ一覧画面
+============================== */
+
+.users-page {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.users-page__header {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+.users-page__title {
+    margin: 0 0 8px;
+    font-size: 28px;
+}
+
+.users-page__lead {
+    margin: 0;
+    color: #666;
+}
+
+.users-page__create-link {
+    display: inline-block;
+    padding: 12px 18px;
+    border-radius: 999px;
+    background: #2563eb;
+    color: #fff;
+    font-weight: bold;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.users-page__create-link:hover {
+    opacity: 0.85;
+}
+
+.users-list {
+    display: grid;
+    gap: 20px;
+}
+
+.user-card {
+    display: grid;
+    grid-template-columns: 120px minmax(0, 1fr);
+    gap: 20px;
+    padding: 20px;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 8px 24px rgb(0 0 0 / 6%);
+}
+
+.user-card__image-wrap {
+    width: 120px;
+    height: 120px;
+}
+
+.user-card__image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #e5e7eb;
+    background: #f3f4f6;
+}
+
+.user-card__body {
+    min-width: 0;
+}
+
+.user-card__name {
+    margin: 0 0 16px;
+    font-size: 22px;
+}
+
+.user-card__info {
+    display: grid;
+    gap: 12px;
+    margin: 0;
+}
+
+.user-card__info-row {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 16px;
+}
+
+.user-card__info-row dt {
+    color: #666;
+    font-weight: bold;
+}
+
+.user-card__info-row dd {
+    margin: 0;
+    word-break: break-all;
+}
+
+.user-card__password {
+    font-family: monospace;
+    font-size: 13px;
+    color: #444;
+}
+
+/*
+   カード右側の本文エリアが、長い文字列に引っ張られて横にはみ出ないようにする。
+*/
+.user-card__body {
+    min-width: 0;
+    max-width: 100%;
+}
+
+/*
+   名前が shibashibashiba... のようにスペースなしで長くても、
+   カード内で折り返す。
+*/
+.user-card__name {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: normal;
+    white-space: normal;
+}
+
+
+.users-pagination {
+    margin-top: 32px;
+}
+
+.users-empty {
+    padding: 40px;
+    border: 1px dashed #d1d5db;
+    border-radius: 16px;
+    background: #fafafa;
+    text-align: center;
+}
+
+.users-empty__link {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 12px 18px;
+    border-radius: 999px;
+    background: #2563eb;
+    color: #fff;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.users-empty__link:hover {
+    opacity: 0.85;
+}
+
+
+/* ==============================
+   ユーザ登録画面
+============================== */
+
 .user-form {
     display: grid;
     gap: 20px;
