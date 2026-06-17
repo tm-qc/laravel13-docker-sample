@@ -65,7 +65,7 @@ class UserRepository
     /**
      * ユーザーを物理削除する
      */
-    public function forceDeleteUser(User $user): bool
+    public function forceDelete(User $user): bool
     {
         /*
             delete():

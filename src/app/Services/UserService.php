@@ -186,7 +186,7 @@ class UserService
 
         try {
             // ユーザ削除のDB操作はRepositoryへ任せる
-            $deleted = $this->userRepository->forceDeleteUser($user);
+            $deleted = $this->userRepository->forceDelete($user);
 
             // DB削除に失敗した場合は例外にする
             if (! $deleted) {
