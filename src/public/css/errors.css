@@ -1,0 +1,84 @@
+/*
+    エラー画面専用CSS
+
+    本番環境のエラー画面は、
+    ・派手すぎない
+    ・何が起きたか最低限わかる
+    ・TOPへ戻れる
+    くらいでOK
+*/
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+    color: #1f2937;
+    background: #f3f4f6;
+}
+
+.error-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24px;
+}
+
+.error-card {
+    width: 100%;
+    max-width: 520px;
+    padding: 40px 32px;
+    text-align: center;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+}
+
+.error-card__code {
+    margin: 0 0 12px;
+    font-size: 48px;
+    font-weight: 700;
+    color: #6b7280;
+    letter-spacing: 0.08em;
+}
+
+.error-card__title {
+    margin: 0 0 16px;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.error-card__message {
+    margin: 0 0 32px;
+    line-height: 1.8;
+    color: #4b5563;
+}
+
+.error-card__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 160px;
+    padding: 12px 20px;
+    color: #ffffff;
+    font-weight: 700;
+    text-decoration: none;
+    background: #2563eb;
+    border-radius: 999px;
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease;
+}
+
+.error-card__button:hover {
+    opacity: 0.85;
+    transform: translateY(-1px);
+}
