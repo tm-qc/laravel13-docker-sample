@@ -53,6 +53,11 @@
                                 {{ $user->name }}
                             </h2>
 
+                                {{-- ユーザ編集画面へのリンク --}}
+                                <a href="{{ route('users.edit', $user) }}" class="user-card__edit-link">
+                                    編集
+                                </a>
+
                             <dl class="user-card__info">
                                 <div class="user-card__info-row">
                                     <dt>メールアドレス</dt>
