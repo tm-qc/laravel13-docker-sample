@@ -177,7 +177,34 @@ class UserService
     }
 
     /**
-     * ユーザを削除する
+     * ユーザーを論理削除する
+     */
+    public function softDeleteUser(User $user): void
+    {
+        try {
+            // 削除処理の実体はRepositoryに任せる
+            $this->userRepository->softDelete($user);
+
+        } catch (\Throwable $e) {
+            // エラーログ出力
+            // 出力先：storage/logs/laravel.log
+            Log::error('ユーザ論理削除エラー', [
+                'user_id' => $user->id,
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
+
+            /*
+             * Controller側でユーザー向けメッセージを出しやすいように、
+             * Serviceでは業務処理失敗として例外を投げ直す。
+             */
+            throw new RuntimeException('ユーザーの論理削除に失敗しました。', 0, $e);
+        }
+    }
+
+    /**
+     * ユーザを物理削除する
      */
     public function forceDeleteUser(User $user): void
     {
@@ -186,16 +213,12 @@ class UserService
 
         try {
             // ユーザ削除のDB操作はRepositoryへ任せる
-            $deleted = $this->userRepository->forceDelete($user);
+            $this->userRepository->forceDelete($user);
 
-            // DB削除に失敗した場合は例外にする
-            if (! $deleted) {
-                throw new RuntimeException('ユーザ削除に失敗しました。');
-            }
         } catch (\Throwable $e) {
             // エラーログ出力
             // 出力先：storage/logs/laravel.log
-            Log::error('ユーザ削除エラー', [
+            Log::error('ユーザ物理削除エラー', [
                 'user_id' => $user->id,
                 'message' => $e->getMessage(),
                 'file' => $e->getFile(),

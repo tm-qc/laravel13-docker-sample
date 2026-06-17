@@ -119,24 +119,36 @@ class UserController extends Controller
     }
 
     /**
-     * 論理削除する
+     * 削除する
      */
     // public function destroy(User $user): RedirectResponse
     // {
-    //     try {
-    //         $this->userService->deleteUser($user);
-
-    //         return redirect()
-    //             ->route('users.index')
-    //             ->with('success', 'ユーザーを削除しました。');
-
-    //     } catch (\Throwable $e) {
-
-    //         return redirect()
-    //             ->route('users.edit', $user)
-    //             ->with('error', 'ユーザーの削除に失敗しました。');
-    //     }
     // }
+
+    /**
+     * ユーザーを論理削除する
+     */
+    public function softDestroy(User $user): RedirectResponse
+    {
+        try {
+            // Serviceに論理削除処理を依頼する。
+            $this->userService->softDeleteUser($user);
+
+            /*
+             * 論理削除後は一覧画面へ戻す。
+             * 一覧ではSoftDeletesにより、削除済みユーザーは自動的に表示されない。
+             */
+            return redirect()
+                ->route('users.index')
+                ->with('success', 'ユーザーを論理削除しました。');
+
+        } catch (\Throwable $e) {
+
+            return redirect()
+                ->route('users.edit', $user)
+                ->with('error', 'ユーザーの論理削除に失敗しました。');
+        }
+    }
 
     /**
      * 物理削除する
@@ -149,7 +161,9 @@ class UserController extends Controller
             return redirect()
                 ->route('users.index')
                 ->with('success', 'ユーザを物理削除しました。');
+
         } catch (\Throwable $e) {
+
             return redirect()
                 ->route('users.edit', $user)
                 ->with('error', 'ユーザの物理削除に失敗しました。');

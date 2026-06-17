@@ -54,6 +54,10 @@ Route::view('/', 'top')->name('top');
  */
 Route::resource('users', UserController::class);
 
+// ユーザーを論理削除する
+Route::delete('/users/{user}/soft-delete', [UserController::class, 'softDestroy'])
+    ->name('users.soft-destroy');
+
 // ユーザを物理削除する
 Route::delete('/users/{user}/force-delete', [UserController::class, 'forceDestroy'])
     ->name('users.force-destroy');

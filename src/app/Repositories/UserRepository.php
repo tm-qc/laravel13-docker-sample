@@ -63,19 +63,34 @@ class UserRepository
     }
 
     /**
-     * ユーザーを物理削除する
+     * ユーザーを論理削除する
      */
-    public function forceDelete(User $user): bool
+    public function softDelete(User $user): void
     {
         /*
-            delete():
-            対象のユーザーレコードをDBから削除する。
+         * SoftDeletesを使っているため、delete() は物理削除ではなく論理削除になる。
+         *
+         * 実際には users.deleted_at に現在日時が入る。
+         * DBのレコード自体は残る。
+         *
+         * 論理削除だけを取得したいときは取得時に onlyTrashed() を使う
+         * 通常、論理削除両方取得したいときは withTrashed() を使う
+         */
+        $user->delete();
+    }
 
-            戻り値をboolにして、Service側で成功・失敗を判断しやすくする。
+    /**
+     * ユーザーを物理削除する
+     */
+    public function forceDelete(User $user): void
+    {
+        /*
+         * delete():
+         * 対象のユーザーレコードをDBから削除する。
+         *
+         * 注意:
+         * delete() にすると論理削除になるため、物理削除にはならない。
         */
-        return (bool) $user->delete();
-
-        // TODO：SoftDeletes導入後はこちらに変更する
-        // return (bool) $user->forceDelete();
+        $user->forceDelete();
     }
 }

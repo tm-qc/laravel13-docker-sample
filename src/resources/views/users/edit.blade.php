@@ -131,8 +131,21 @@
                 </button>
             </div>
         </form>
+
+        {{-- 論理削除フォーム --}}
+        <form action="{{ route('users.soft-destroy', $user) }}" method="POST" class="delete-form">
+            @csrf
+            @method('DELETE')
+
+            <button type="submit" class="button-danger" onclick="return confirm('このユーザーを論理削除しますか？\nDBにはデータが残ります。');">
+                論理削除する
+            </button>
+        </form>
+
+
         {{--
             ユーザ物理削除フォーム
+            ※サンプルなので論理と物理双方の削除機能を作ってます
 
             物理削除はDBから完全に削除する処理。
             復元できないため、ボタン名と確認メッセージで明確にする。
