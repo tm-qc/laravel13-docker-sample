@@ -1,32 +1,50 @@
 /* ユーザー画面系のCSS */
 
 /* ==============================
-   ユーザ一覧画面
+   ユーザ画面共通
 ============================== */
 
+/*
+   ユーザ画面全体の横幅を揃える
+*/
 .users-page {
     max-width: 1000px;
     margin: 0 auto;
 }
 
+/*
+   ユーザ画面上部のタイトルエリア
+*/
 .users-page__header {
     display: flex;
+    align-items: center;
     justify-content: space-between;
     gap: 24px;
-    align-items: center;
     margin-bottom: 32px;
 }
 
+/*
+   ユーザ画面のタイトル
+*/
 .users-page__title {
     margin: 0 0 8px;
     font-size: 28px;
 }
 
+/*
+   ユーザ画面の説明文
+*/
 .users-page__lead {
     margin: 0;
     color: #666;
 }
 
+/*
+   ユーザ画面用の丸いリンクボタン
+
+   一覧画面の「ユーザ登録」、
+   編集画面の「ユーザ一覧へ戻る」で使う。
+*/
 .users-page__create-link {
     display: inline-block;
     padding: 12px 18px;
@@ -38,15 +56,54 @@
     white-space: nowrap;
 }
 
+/*
+   ユーザ画面用の丸いリンクボタン hover
+*/
 .users-page__create-link:hover {
     opacity: 0.85;
 }
 
+/*
+   ユーザアイコン画像の枠
+
+   一覧画面、編集画面の現在画像表示、
+   今後の登録画面プレビューで共通利用できる。
+*/
+.user-icon {
+    width: 120px;
+    height: 120px;
+}
+
+/*
+   ユーザアイコン画像
+
+   一覧画面、編集画面の現在画像表示、
+   今後の登録画面プレビューで共通利用できる。
+*/
+.user-icon__image {
+    width: 120px;
+    height: 120px;
+    border: 1px solid #e5e7eb;
+    border-radius: 50%;
+    background: #f3f4f6;
+    object-fit: cover;
+}
+
+/* ==============================
+   ユーザ一覧画面
+============================== */
+
+/*
+   ユーザカード一覧
+*/
 .users-list {
     display: grid;
     gap: 20px;
 }
 
+/*
+   ユーザ1件分のカード
+*/
 .user-card {
     display: grid;
     grid-template-columns: 120px minmax(0, 1fr);
@@ -58,81 +115,128 @@
     box-shadow: 0 8px 24px rgb(0 0 0 / 6%);
 }
 
-.user-card__image-wrap {
-    width: 120px;
-    height: 120px;
-}
+/*
+   カード右側の本文エリア
 
-.user-card__image {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 1px solid #e5e7eb;
-    background: #f3f4f6;
-}
-
+   長い文字列に引っ張られて横にはみ出ないようにする。
+*/
 .user-card__body {
     min-width: 0;
+    max-width: 100%;
 }
 
+/*
+   ユーザ名
+
+   スペースなしで長くてもカード内で折り返す。
+*/
 .user-card__name {
+    max-width: 100%;
     margin: 0 0 16px;
     font-size: 22px;
-}
-
-.user-card__info {
-    display: grid;
-    gap: 12px;
-    margin: 0;
-}
-
-.user-card__info-row {
-    display: grid;
-    grid-template-columns: 140px 1fr;
-    gap: 16px;
-}
-
-.user-card__info-row dt {
-    color: #666;
-    font-weight: bold;
-}
-
-.user-card__info-row dd {
-    margin: 0;
-    word-break: break-all;
-}
-
-.user-card__password {
-    font-family: monospace;
-    font-size: 13px;
-    color: #444;
-}
-
-/*
-   カード右側の本文エリアが、長い文字列に引っ張られて横にはみ出ないようにする。
-*/
-.user-card__body {
-    min-width: 0;
-    max-width: 100%;
-}
-
-/*
-   名前が shibashibashiba... のようにスペースなしで長くても、
-   カード内で折り返す。
-*/
-.user-card__name {
-    max-width: 100%;
     overflow-wrap: anywhere;
     word-break: normal;
     white-space: normal;
 }
 
+/*
+   ユーザ名と編集ボタンを横並びにする
+*/
+.user-card__title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
 
+/*
+   編集ボタン横並び時のユーザ名
+
+   通常の .user-card__name の下余白をなくす。
+*/
+.user-card__title-row .user-card__name {
+    min-width: 0;
+    margin: 0;
+}
+
+/*
+   編集リンク
+
+   aタグを小さめのボタンのように見せる。
+*/
+.user-card__edit-link {
+    flex-shrink: 0;
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 9999px;
+    background-color: #2563eb;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none;
+}
+
+/*
+   編集リンク hover
+*/
+.user-card__edit-link:hover {
+    opacity: 0.85;
+}
+
+/*
+   ユーザ情報一覧
+*/
+.user-card__info {
+    display: grid;
+    gap: 12px;
+    margin: 16px 0 0;
+}
+
+/*
+   ユーザ情報の1行
+*/
+.user-card__info-row {
+    display: grid;
+    grid-template-columns: 140px minmax(0, 1fr);
+    gap: 16px;
+}
+
+/*
+   ユーザ情報の項目名
+*/
+.user-card__info-row dt {
+    color: #666;
+    font-weight: bold;
+}
+
+/*
+   ユーザ情報の値
+*/
+.user-card__info-row dd {
+    margin: 0;
+    word-break: break-all;
+}
+
+/*
+   パスワード非表示文言
+*/
+.user-card__password {
+    color: #444;
+    font-family: monospace;
+    font-size: 13px;
+}
+
+/*
+   ページネーション表示位置
+*/
 .users-pagination {
     margin-top: 32px;
 }
 
+/*
+   ユーザ0件時の表示
+*/
 .users-empty {
     padding: 40px;
     border: 1px dashed #d1d5db;
@@ -141,6 +245,9 @@
     text-align: center;
 }
 
+/*
+   ユーザ0件時の登録リンク
+*/
 .users-empty__link {
     display: inline-block;
     margin-top: 16px;
@@ -152,48 +259,31 @@
     text-decoration: none;
 }
 
+/*
+   ユーザ0件時の登録リンク hover
+*/
 .users-empty__link:hover {
     opacity: 0.85;
 }
-
 
 /* ==============================
    ユーザ登録画面
 ============================== */
 
-.user-form {
-    display: grid;
-    gap: 20px;
-}
+/*
+   現時点では登録画面専用CSSなし
 
-.form-group {
-    display: grid;
-    gap: 8px;
-}
+   form-card / page-title / button-primary / form-control などは
+   app.css の共通CSSを使用する。
+*/
 
-.form-label {
-    font-weight: 700;
-}
+/* ==============================
+   ユーザ編集画面
+============================== */
 
-.form-control {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 10px 12px;
-    font-size: 16px;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-}
+/*
+   現時点では編集画面専用CSSなし
 
-.form-control:focus {
-    border-color: #2563eb;
-    outline: none;
-    box-shadow: 0 0 0 3px rgb(37 99 235 / 15%);
-}
-
-/* users.edit */
-
-
-/* users.show */
-
-
-/* users.index */
+   users-page / user-form / form-control / user-icon など、
+   共通CSSとユーザ画面共通CSSを使用する。
+*/

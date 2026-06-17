@@ -31,7 +31,7 @@
             <div class="users-list">
                 @foreach ($users as $user)
                     <article class="user-card">
-                        <div class="user-card__image-wrap">
+                        <div class="user-icon">
                             {{--
                                 アイコン画像を表示する
 
@@ -45,18 +45,20 @@
                                 php artisan storage:link
                             --}}
                             <img src="{{ $user->icon_image_url }}" alt="{{ $user->name }}のアイコン画像"
-                                class="user-card__image">
+                                class="user-icon__image">
                         </div>
 
                         <div class="user-card__body">
-                            <h2 class="user-card__name">
-                                {{ $user->name }}
-                            </h2>
+                            <div class="user-card__title-row">
+                                <h2 class="user-card__name">
+                                    {{ $user->name }}
+                                </h2>
 
                                 {{-- ユーザ編集画面へのリンク --}}
                                 <a href="{{ route('users.edit', $user) }}" class="user-card__edit-link">
                                     編集
                                 </a>
+                            </div>
 
                             <dl class="user-card__info">
                                 <div class="user-card__info-row">
