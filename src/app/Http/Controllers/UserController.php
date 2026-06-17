@@ -59,13 +59,15 @@ class UserController extends Controller
             // 登録画面へ戻る
             return redirect()
                 ->route('users.create')
-                ->with('success', 'ユーザーを登録しました。');
+                ->with('success', __('messages.users.create.success'));
         } catch (\Throwable $e) {
 
             return redirect()
                 ->back()
-                ->withInput()
-                ->with('error', 'ユーザー登録に失敗しました。');
+                // withInput() はリダイレクト後に入力値を復元するための Laravel 標準の仕組み
+                // パスワードまで保持する必要はないので、実務では except() で除外しておく
+                ->withInput($request->except(['password', 'password_confirmation']))
+                ->with('error', __('messages.users.create.error'));
         }
     }
 
