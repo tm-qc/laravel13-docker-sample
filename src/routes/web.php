@@ -53,3 +53,7 @@ Route::view('/', 'top')->name('top');
  * php artisan route:list
  */
 Route::resource('users', UserController::class);
+
+// ユーザを物理削除する
+Route::delete('/users/{user}/force-delete', [UserController::class, 'forceDestroy'])
+    ->name('users.force-destroy');

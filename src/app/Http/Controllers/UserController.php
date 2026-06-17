@@ -119,10 +119,40 @@ class UserController extends Controller
     }
 
     /**
-     * 削除する
+     * 論理削除する
      */
-    public function destroy(string $id)
+    // public function destroy(User $user): RedirectResponse
+    // {
+    //     try {
+    //         $this->userService->deleteUser($user);
+
+    //         return redirect()
+    //             ->route('users.index')
+    //             ->with('success', 'ユーザーを削除しました。');
+
+    //     } catch (\Throwable $e) {
+
+    //         return redirect()
+    //             ->route('users.edit', $user)
+    //             ->with('error', 'ユーザーの削除に失敗しました。');
+    //     }
+    // }
+
+    /**
+     * 物理削除する
+     */
+    public function forceDestroy(User $user): RedirectResponse
     {
-        //
+        try {
+            $this->userService->forceDeleteUser($user);
+
+            return redirect()
+                ->route('users.index')
+                ->with('success', 'ユーザを物理削除しました。');
+        } catch (\Throwable $e) {
+            return redirect()
+                ->route('users.edit', $user)
+                ->with('error', 'ユーザの物理削除に失敗しました。');
+        }
     }
 }

@@ -128,6 +128,43 @@ body {
     transform: translateY(0);
 }
 
+/*
+   危険操作ボタン
+
+   削除など、取り消しにくい操作で使用する。
+*/
+.button-danger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 140px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    background: #dc2626;
+    color: #ffffff;
+    cursor: pointer;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s,
+        background 0.2s;
+}
+
+.button-danger:hover {
+    transform: translateY(-2px);
+    background: #b91c1c;
+    box-shadow: 0 8px 20px rgb(220 38 38 / 30%);
+}
+
+.button-danger:active {
+    transform: translateY(0);
+}
+
 /* =========================
    共通フォーム
 ========================= */
@@ -159,6 +196,15 @@ body {
     border-color: #2563eb;
     outline: none;
     box-shadow: 0 0 0 3px rgb(37 99 235 / 15%);
+}
+
+/* 削除フォーム：更新フォームとは別フォームなので、少し余白を空ける。 */
+.delete-form {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #e5e7eb;
 }
 
 .is-invalid {

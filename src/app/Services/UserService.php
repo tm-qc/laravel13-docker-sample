@@ -97,10 +97,10 @@ class UserService
     }
 
     /**
-         * ユーザを更新する
-         *
-         * @param  array<string, mixed>  $validated
-         */
+     * ユーザを更新する
+     *
+     * @param  array<string, mixed>  $validated
+     */
     public function updateUser(User $user, array $validated, ?UploadedFile $iconImage): User
     {
         // 新しい画像パスの初期値
@@ -176,5 +176,74 @@ class UserService
         }
     }
 
+    /**
+     * ユーザを削除する
+     */
+    public function forceDeleteUser(User $user): void
+    {
+        // 画像削除用にパスを保持する
+        $iconImagePath = $user->icon_image_path;
 
+        try {
+            // ユーザ削除のDB操作はRepositoryへ任せる
+            $deleted = $this->userRepository->forceDeleteUser($user);
+
+            // DB削除に失敗した場合は例外にする
+            if (! $deleted) {
+                throw new RuntimeException('ユーザ削除に失敗しました。');
+            }
+        } catch (\Throwable $e) {
+            // エラーログ出力
+            // 出力先：storage/logs/laravel.log
+            Log::error('ユーザ削除エラー', [
+                'user_id' => $user->id,
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
+
+            // エラーを上層に流す
+            throw $e;
+        }
+
+        // DB削除成功後に、不要になったアイコン画像を削除する
+        $this->deleteIconImageFile($iconImagePath, $user->id);
+    }
+
+    /**
+     * アイコン画像ファイルを削除する
+     *
+     * DB削除後の画像削除は、ユーザ削除処理の後片付け。
+     *
+     * ここで画像削除に失敗しても、DB上のユーザはすでに削除済み。
+     * そのため「ユーザ削除失敗」として扱わず、warningログだけ残す。
+     *
+     * 方針としてはDBを正とするので、DBだけ消えてるのはOKとする
+     * 万が一画像が残り、整理が必要になった場合はバッチなどで対応する。
+     */
+    private function deleteIconImageFile(string $iconImagePath, int $userId): void
+    {
+        if ($iconImagePath === '') {
+            return;
+        }
+
+        try {
+            $iconImageDeleted = Storage::delete($iconImagePath);
+
+            if (! $iconImageDeleted) {
+                Log::warning('ユーザ削除後のアイコン画像削除に失敗しました。', [
+                    'user_id' => $userId,
+                    'icon_image_path' => $iconImagePath,
+                ]);
+            }
+        } catch (\Throwable $e) {
+            Log::warning('ユーザ削除後のアイコン画像削除で例外が発生しました。', [
+                'user_id' => $userId,
+                'icon_image_path' => $iconImagePath,
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
+        }
+    }
 }

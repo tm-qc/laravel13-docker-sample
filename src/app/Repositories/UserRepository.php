@@ -61,4 +61,21 @@ class UserRepository
         // 更新後の最新データを返す
         return $user->refresh();
     }
+
+    /**
+     * ユーザーを物理削除する
+     */
+    public function forceDeleteUser(User $user): bool
+    {
+        /*
+            delete():
+            対象のユーザーレコードをDBから削除する。
+
+            戻り値をboolにして、Service側で成功・失敗を判断しやすくする。
+        */
+        return (bool) $user->delete();
+
+        // TODO：SoftDeletes導入後はこちらに変更する
+        // return (bool) $user->forceDelete();
+    }
 }

@@ -126,10 +126,31 @@
 
             {{-- 更新ボタン --}}
             <div class="form-group">
-                <button type="submit" class="users-page__create-link">
+                <button type="submit" class="button-primary">
                     更新する
                 </button>
             </div>
+        </form>
+        {{--
+            ユーザ物理削除フォーム
+
+            物理削除はDBから完全に削除する処理。
+            復元できないため、ボタン名と確認メッセージで明確にする。
+
+            method="POST":
+            HTMLフォームは GET / POST しか直接送信できないためPOSTで設定
+
+            @method('DELETE'):
+            Laravel側に「このPOSTはDELETEとして扱ってください」と指示
+        --}}
+        <form action="{{ route('users.force-destroy', $user) }}" method="POST" class="delete-form"
+            onsubmit="return confirm('本当にこのユーザーを物理削除しますか？この操作は元に戻せません。');">
+            @csrf
+            @method('DELETE')
+
+            <button type="submit" class="button-danger">
+                物理削除する
+            </button>
         </form>
     </div>
 @endsection
