@@ -12,20 +12,6 @@
             ユーザー登録
         </h1>
 
-        @if (session('success'))
-            <div class="alert-success">
-                <span>✓</span>
-                {{ session('success') }}
-            </div>
-        @endif
-
-        @if (session('error'))
-            <div class="alert-error">
-                <span>×</span>
-                {{ session('error') }}
-            </div>
-        @endif
-
         <form action="{{ route('users.store') }}" method="post" enctype="multipart/form-data" class="user-form">
             @csrf
 

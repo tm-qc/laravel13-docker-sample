@@ -25,14 +25,6 @@
                 ユーザ一覧へ戻る
             </a>
         </div>
-
-        {{-- 更新成功メッセージ --}}
-        @if (session('success'))
-            <div class="alert alert--success">
-                {{ session('success') }}
-            </div>
-        @endif
-
         {{--
             ユーザ更新フォーム
 

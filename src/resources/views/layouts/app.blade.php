@@ -15,6 +15,10 @@
     @include('components.header')
 
     <main class="page">
+        {{-- 成功・失敗メッセージを共通表示する --}}
+        @include('components.alert')
+
+        {{-- 各画面の内容 --}}
         @yield('content')
     </main>
 
