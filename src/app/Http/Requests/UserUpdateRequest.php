@@ -81,4 +81,25 @@ class UserUpdateRequest extends FormRequest
             'profile' => $this->input('profile') ?? '',
         ]);
     }
+
+    /**
+     * バリデーションエラーメッセージを定義する
+     *
+     * 画像のサイズが大きい場合に src/lang/ja/validation.php で
+     *
+     * [ 'uploaded' => ':attribute のアップロードに失敗しました。', ]
+     *
+     * が先に表示されて
+     *
+     * max の [ 'file' => ':attribute のサイズは :max キロバイト以下にしてください。', ] が表示されない
+     *
+     * 一旦 src/lang/ja/validation.php で icon_image の uploaded のカスタムメッセを入れて対応する。
+     * もし max できちんと出したいときは以下を共通化も視野に入れて検討する。
+     */
+    // public function messages(): array
+    // {
+    //     return [
+    //         'icon_image.max' => 'アイコン画像は2MB以下の画像を指定してください。',
+    //     ];
+    // }
 }

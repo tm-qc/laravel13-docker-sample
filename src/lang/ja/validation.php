@@ -182,6 +182,9 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'icon_image' => [
+            'uploaded' => 'アイコン画像のアップロードに失敗しました。画像サイズが大きすぎる可能性があります。',
+        ],
     ],
 
     /*
@@ -201,7 +204,7 @@ return [
         'password' => 'パスワード',
         'password_confirmation' => 'パスワード確認',
         'profile' => 'プロフィール',
-        'icon' => 'アイコン画像',
+        'icon_image' => 'アイコン画像',
     ],
 
 ];
