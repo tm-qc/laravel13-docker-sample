@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserStoreRequest;
+use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class UserController extends Controller
@@ -91,9 +91,31 @@ class UserController extends Controller
     /**
      * 更新する
      */
-    public function update(Request $request, string $id)
+    public function update(UserUpdateRequest $request, User $user): RedirectResponse
     {
-        //
+        try {
+            // フォームリクエストからバリデーション済みデータを取得
+            $validated = $request->validated();
+
+            // 更新処理はServiceへ任せる
+            $this->userService->updateUser(
+                $user,
+                $validated,
+                $request->file('icon_image')
+            );
+
+            // 編集画面へ戻る
+            return redirect()
+                ->route('users.edit', $user)
+                ->with('success', __('messages.users.update.success'));
+        } catch (\Throwable $e) {
+
+            return redirect()
+                ->back()
+                // パスワードは入力値として復元しない
+                ->withInput($request->except(['password', 'password_confirmation']))
+                ->with('error', __('messages.users.update.error'));
+        }
     }
 
     /**

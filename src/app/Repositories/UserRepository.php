@@ -43,4 +43,22 @@ class UserRepository
             'profile' => $data['profile'],
         ]);
     }
+
+    /**
+     * ユーザを更新する
+     *
+     * @param  array<string, mixed>  $data
+     */
+    public function update(User $user, array $data): User
+    {
+        // usersテーブルを更新する。
+        //
+        // update():
+        // 成功したら true、失敗したら false が返る。
+        // ただし通常のDBエラーは例外になる。
+        $user->update($data);
+
+        // 更新後の最新データを返す
+        return $user->refresh();
+    }
 }

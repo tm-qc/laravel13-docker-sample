@@ -95,4 +95,86 @@ class UserService
             throw $e;
         }
     }
+
+    /**
+         * ユーザを更新する
+         *
+         * @param  array<string, mixed>  $validated
+         */
+    public function updateUser(User $user, array $validated, ?UploadedFile $iconImage): User
+    {
+        // 新しい画像パスの初期値
+        // 画像がアップロードされなければ空文字のまま
+        $newIconImagePath = '';
+
+        // 更新前の古い画像パスを先に保持しておく
+        $oldIconImagePath = $user->icon_image_path;
+
+        try {
+            // 更新データを作成する
+            $updateData = [
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                // フォームリクエストでケアしてるので  ?? '' は不要
+                'profile' => $validated['profile'],
+            ];
+
+            // パスワードが入力されている場合のみ更新する
+            //
+            // Userモデル側で password => hashed の cast を設定しているため、
+            // ここで Hash::make() は不要。
+            if (! empty($validated['password'])) {
+                $updateData['password'] = $validated['password'];
+            }
+
+            // 新しいアイコン画像がアップロードされている場合のみ差し替える
+            if ($iconImage !== null) {
+
+                $storedPath = $iconImage->store('users');
+
+                // 画像保存に失敗した場合はDB更新せずにエラーにする
+                if ($storedPath === false) {
+                    throw new RuntimeException('画像の保存に失敗しました。');
+                }
+
+                // 新しい画像パスを保持する
+                $newIconImagePath = $storedPath;
+
+                // DB更新用データに新しい画像パスを入れる
+                $updateData['icon_image_path'] = $newIconImagePath;
+            }
+
+            // ユーザ更新のDB操作はRepositoryへ任せる
+            $updatedUser = $this->userRepository->update($user, $updateData);
+
+            // DB更新が成功した後で、古い画像を削除する
+            if ($newIconImagePath !== '' && $oldIconImagePath !== '') {
+                Storage::delete($oldIconImagePath);
+            }
+
+            return $updatedUser;
+        } catch (\Throwable $e) {
+            /*
+               新しい画像を保存した後にDB更新で失敗した場合、
+               新しい画像だけ残るのを防ぐ。
+            */
+            if ($newIconImagePath !== '') {
+                Storage::delete($newIconImagePath);
+            }
+
+            // エラーログ出力
+            // 出力先：storage/logs/laravel.log
+            Log::error('ユーザ更新エラー', [
+                'user_id' => $user->id,
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
+
+            // エラーを上層に流す
+            throw $e;
+        }
+    }
+
+
 }
