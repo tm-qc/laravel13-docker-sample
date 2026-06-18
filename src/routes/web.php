@@ -28,15 +28,9 @@ if (app()->environment('local')) {
 |
 */
 
-// Laravelのトップページ
+// TOP画面
 Route::get('/', [TopController::class, 'index'])
     ->name('top');
-
-
-/**
- * TOP画面
- */
-Route::view('/', 'top')->name('top');
 
 /**
  * ユーザーCRUDのルートをリソースで一括定義
