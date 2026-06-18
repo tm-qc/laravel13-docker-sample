@@ -53,11 +53,16 @@ body {
 .site-nav {
     display: flex;
     gap: 16px;
+    align-items: center;
 }
 
 .site-nav a {
     color: #2563eb;
     text-decoration: none;
+}
+
+.site-nav a:hover {
+    text-decoration: underline;
 }
 
 .site-nav a:hover {
@@ -165,6 +170,23 @@ body {
     transform: translateY(0);
 }
 
+/*
+   ヘッダー内ログアウトボタン
+*/
+.logout-button {
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #2563eb;
+    cursor: pointer;
+    font: inherit;
+    text-decoration: none;
+}
+
+.logout-button:hover {
+    text-decoration: underline;
+}
+
 /* =========================
    共通フォーム
 ========================= */
@@ -205,6 +227,33 @@ body {
     margin-top: 24px;
     padding-top: 16px;
     border-top: 1px solid #e5e7eb;
+}
+
+/*
+   フォームボタンエリア
+
+   入力欄とボタンが近すぎないように上余白を空ける。
+*/
+.form-actions {
+    margin-top: 24px;
+}
+
+/*
+   ヘッダー内ログアウトフォーム
+*/
+.logout-form {
+    margin: 0;
+}
+
+
+/*
+   フォームボタン中央寄せ
+
+   ログイン画面など、ボタンを中央に置きたい場合に使う。
+*/
+.form-actions--center {
+    display: flex;
+    justify-content: center;
 }
 
 .is-invalid {
