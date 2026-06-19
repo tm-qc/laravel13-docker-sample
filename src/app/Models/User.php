@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Storage;
 
 //登録許可項目
 #[Fillable([
+    'role_id',
     'name',
     'email',
     'password',
@@ -66,5 +68,17 @@ class User extends Authenticatable
                 return Storage::url($this->icon_image_path);
             }
         );
+    }
+
+    /**
+     * リレーション（子）
+     * ユーザーに紐づくロールを取得する
+     *
+     * users.role_id から roles.id に紐づく。
+     * 1ユーザーは1つのロールを持つ。
+     */
+    public function role(): BelongsTo
+    {
+        return $this->belongsTo(Role::class);
     }
 }

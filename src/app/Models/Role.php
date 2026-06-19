@@ -24,13 +24,14 @@ class Role extends Model
     public const CODE_GENERAL = 'general';
 
     /**
+     * リレーション（親）
      * このロールに紐づくユーザー一覧を取得する
      *
      * roles.id に対して users.role_id が紐づく。
-     * TODO：usersにrole_id作ってから
+     * Role は複数の User を持つ。
      */
-    // public function users(): HasMany
-    // {
-    //     return $this->hasMany(User::class);
-    // }
+    public function users(): HasMany
+    {
+        return $this->hasMany(User::class);
+    }
 }
