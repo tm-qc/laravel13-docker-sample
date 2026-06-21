@@ -63,8 +63,10 @@ class User extends Authenticatable
     /**
      * アイコン画像の表示用URLを取得する(icon_image_path)
      *
-     * DBには users/xxxx.jpg のような保存パスだけ持たせる。
-     * 画面で使うURLはこのアクセサで作る。
+     * DBには users/xxxx.jpg のような保存パスだけ持たせる
+     * 画面で使うURLはこのアクセサで作る
+     *
+     * @return Attribute
      */
     protected function iconImageUrl(): Attribute
     {
@@ -96,13 +98,14 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
-
     /**
      * Policy：管理者ユーザーか判定する
      *
      * Policyや画面表示制御で毎回 role.code を直接比較すると、
      * 判定条件があちこちに散らばるため、Userモデルにまとめる。
      * @see https://laravel.com/docs/13.x/authorization#generating-policies
+     *
+     * @return boolean
      */
     public function isAdmin(): bool
     {
@@ -112,7 +115,9 @@ class User extends Authenticatable
 
     /**
      * 一般ユーザーか判定する
-     */
+     *
+     * @return boolean
+    */
     public function isGeneral(): bool
     {
         return $this->role?->code === Role::CODE_GENERAL;

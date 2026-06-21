@@ -12,7 +12,10 @@ class UserRepository
      *
      * RepositoryはDB操作を担当する。
      * 一覧取得のEloquent処理をServiceから分離する。
-     */
+     *
+     * @param integer $perPage 表示件数の設定値
+     * @return LengthAwarePaginator
+    */
     public function getPaginatedUsers(int $perPage): LengthAwarePaginator
     {
         // latest():
@@ -26,7 +29,8 @@ class UserRepository
     /**
      * ユーザを新規登録する
      *
-     * @param  array<string, mixed>  $data
+     * @param array $data
+     * @return User
      */
     public function create(array $data): User
     {
@@ -48,25 +52,30 @@ class UserRepository
     /**
      * ユーザを更新する
      *
-     * @param  array<string, mixed>  $data
-     */
-    public function update(User $user, array $data): User
+     * @param User $targetUser
+     * @param array $data
+     * @return User
+    */
+    public function update(User $targetUser, array $data): User
     {
         // usersテーブルを更新する。
         //
         // update():
         // 成功したら true、失敗したら false が返る。
         // ただし通常のDBエラーは例外になる。
-        $user->update($data);
+        $targetUser->update($data);
 
         // 更新後の最新データを返す
-        return $user->refresh();
+        return $targetUser->refresh();
     }
 
     /**
      * ユーザーを論理削除する
-     */
-    public function softDelete(User $user): void
+     *
+     * @param User $targetUser
+     * @return void
+    */
+    public function softDelete(User $targetUser): void
     {
         /*
          * SoftDeletesを使っているため、delete() は物理削除ではなく論理削除になる。
@@ -77,13 +86,16 @@ class UserRepository
          * 論理削除だけを取得したいときは取得時に onlyTrashed() を使う
          * 通常、論理削除両方取得したいときは withTrashed() を使う
          */
-        $user->delete();
+        $targetUser->delete();
     }
 
     /**
      * ユーザーを物理削除する
+     *
+     * @param User $targetUser
+     * @return void
      */
-    public function forceDelete(User $user): void
+    public function forceDelete(User $targetUser): void
     {
         /*
          * delete():
@@ -92,6 +104,6 @@ class UserRepository
          * 注意:
          * delete() にすると論理削除になるため、物理削除にはならない。
         */
-        $user->forceDelete();
+        $targetUser->forceDelete();
     }
 }

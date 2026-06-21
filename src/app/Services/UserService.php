@@ -13,10 +13,12 @@ use RuntimeException;
 class UserService
 {
     /**
+     * コンストラクタ
      * UserRepositoryをDIする
      *
-     * Serviceは処理の流れを担当し、
-     * DB操作はRepositoryへ任せる。
+     * Serviceは処理の流れを担当し、DB操作はRepositoryへ任せる。
+     *
+     * @param UserRepository $userRepository
      */
     public function __construct(
         private readonly UserRepository $userRepository,
@@ -25,6 +27,9 @@ class UserService
 
     /**
      * ユーザ一覧をページネーション付きで取得する
+     *
+     * @param integer $perPage 表示件数設定値
+     * @return LengthAwarePaginator
      */
     public function getPaginatedUsers(int $perPage = 3): LengthAwarePaginator
     {
@@ -39,7 +44,9 @@ class UserService
     /**
      * ユーザを新規登録する
      *
-     * @param  array<string, mixed>  $validated
+     * @param array $validated
+     * @param UploadedFile|null $iconImage
+     * @return User
      */
     public function createUser(array $validated, ?UploadedFile $iconImage): User
     {
@@ -100,16 +107,19 @@ class UserService
     /**
      * ユーザを更新する
      *
-     * @param  array<string, mixed>  $validated
+     * @param User $targetUser
+     * @param array $validated
+     * @param UploadedFile|null $iconImage
+     * @return User
      */
-    public function updateUser(User $user, array $validated, ?UploadedFile $iconImage): User
+    public function updateUser(User $targetUser, array $validated, ?UploadedFile $iconImage): User
     {
         // 新しい画像パスの初期値
         // 画像がアップロードされなければ空文字のまま
         $newIconImagePath = '';
 
         // 更新前の古い画像パスを先に保持しておく
-        $oldIconImagePath = $user->icon_image_path;
+        $oldIconImagePath = $targetUser->icon_image_path;
 
         try {
             // 更新データを作成する
@@ -160,7 +170,7 @@ class UserService
             }
 
             // ユーザ更新のDB操作はRepositoryへ任せる
-            $updatedUser = $this->userRepository->update($user, $updateData);
+            $updatedUser = $this->userRepository->update($targetUser, $updateData);
 
             // DB更新が成功した後で、古い画像を削除する
             if ($newIconImagePath !== '' && $oldIconImagePath !== '') {
@@ -180,7 +190,7 @@ class UserService
             // エラーログ出力
             // 出力先：storage/logs/laravel.log
             Log::error('ユーザ更新エラー', [
-                'user_id' => $user->id,
+                'user_id' => $targetUser->id,
                 'message' => $e->getMessage(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
@@ -193,18 +203,21 @@ class UserService
 
     /**
      * ユーザーを論理削除する
+     *
+     * @param User $targetUser
+     * @return void
      */
-    public function softDeleteUser(User $user): void
+    public function softDeleteUser(User $targetUser): void
     {
         try {
             // 削除処理の実体はRepositoryに任せる
-            $this->userRepository->softDelete($user);
+            $this->userRepository->softDelete($targetUser);
 
         } catch (\Throwable $e) {
             // エラーログ出力
             // 出力先：storage/logs/laravel.log
             Log::error('ユーザ論理削除エラー', [
-                'user_id' => $user->id,
+                'user_id' => $targetUser->id,
                 'message' => $e->getMessage(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
@@ -220,21 +233,24 @@ class UserService
 
     /**
      * ユーザを物理削除する
+     *
+     * @param User $targetUser
+     * @return void
      */
-    public function forceDeleteUser(User $user): void
+    public function forceDeleteUser(User $targetUser): void
     {
         // 画像削除用にパスを保持する
-        $iconImagePath = $user->icon_image_path;
+        $iconImagePath = $targetUser->icon_image_path;
 
         try {
             // ユーザ削除のDB操作はRepositoryへ任せる
-            $this->userRepository->forceDelete($user);
+            $this->userRepository->forceDelete($targetUser);
 
         } catch (\Throwable $e) {
             // エラーログ出力
             // 出力先：storage/logs/laravel.log
             Log::error('ユーザ物理削除エラー', [
-                'user_id' => $user->id,
+                'user_id' => $targetUser->id,
                 'message' => $e->getMessage(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
@@ -245,7 +261,7 @@ class UserService
         }
 
         // DB削除成功後に、不要になったアイコン画像を削除する
-        $this->deleteIconImageFile($iconImagePath, $user->id);
+        $this->deleteIconImageFile($iconImagePath, $targetUser->id);
     }
 
     /**
@@ -258,6 +274,10 @@ class UserService
      *
      * 方針としてはDBを正とするので、DBだけ消えてるのはOKとする
      * 万が一画像が残り、整理が必要になった場合はバッチなどで対応する。
+     *
+     * @param string $iconImagePath
+     * @param integer $userId
+     * @return void
      */
     private function deleteIconImageFile(string $iconImagePath, int $userId): void
     {

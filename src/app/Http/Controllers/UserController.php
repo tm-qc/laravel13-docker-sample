@@ -14,10 +14,9 @@ use Illuminate\View\View;
 class UserController extends Controller
 {
     /**
-     * UserServiceをControllerで使えるようにする
+     * コンストラクタ
      *
-     * Laravelのサービスコンテナが自動でUserServiceを生成してくれるため、
-     * new UserService() は不要。
+     * @param UserService $userService UserServiceをControllerで使えるようにする
      */
     public function __construct(
         private readonly UserService $userService
