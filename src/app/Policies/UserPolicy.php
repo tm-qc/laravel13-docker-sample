@@ -97,4 +97,13 @@ class UserPolicy
     //     return $user->isAdmin();
     // }
 
+    /**
+     * ユーザーのロールを変更できるか判定する
+     *
+     * 管理者のみ変更可能
+     */
+    public function changeRole(User $user): bool
+    {
+        return $user->isAdmin();
+    }
 }

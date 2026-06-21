@@ -156,7 +156,17 @@ class UserController extends Controller
             abort(403);
         }
 
-        return view('users.edit', compact('user'));
+        /**
+         * ロール選択肢を取得する
+         *
+         * 編集画面でロールを選択できるようにする。
+         * 無効なロールは選択肢に出さない。
+         */
+        $roles = Role::where('is_active', true)
+            ->orderBy('id')
+            ->get();
+
+        return view('users.edit', compact('user', 'roles'));
     }
 
     /**

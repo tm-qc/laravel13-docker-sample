@@ -120,6 +120,20 @@ class UserService
                 'profile' => $validated['profile'],
             ];
 
+            /**
+             * role_id がバリデーション済みデータに存在する場合だけ更新する。
+             *
+             * 管理者の場合:
+             * - UserUpdateRequest で role_id が required になる
+             * - ここで role_id を更新する
+             *
+             * 一般ユーザーの場合:
+             * - validated に role_id は入らない
+            */
+            if (array_key_exists('role_id', $validated)) {
+                $updateData['role_id'] = $validated['role_id'];
+            }
+
             // パスワードが入力されている場合のみ更新する
             //
             // Userモデル側で password => hashed の cast を設定しているため、

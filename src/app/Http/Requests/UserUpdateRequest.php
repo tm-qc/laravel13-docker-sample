@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -28,7 +29,33 @@ class UserUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+
+        // ロール変更できるか判定する
+        $canChangeRole = $this->user()?->can('changeRole', User::class) ;
+
         return [
+            // 管理者だけ role_id を送信可能にする判定
+            'role_id' => [
+                /**
+                 * ポリシーの判定を使って、管理者以外の場合、role_id をバリデーション済みデータから除外する。
+                 *
+                 * 一般ユーザーが直接POSTで role_id を送っても、
+                 * Service側の更新対象データに role_id が入らないようにする。
+                 *
+                 * 管理者の場合だけ、正しいロールIDで更新できるようにする。
+                */
+                Rule::excludeIf(!$canChangeRole),
+                'required',
+                'integer',
+
+                /**
+                 * rolesテーブルに存在し、かつ有効なロールだけ許可する。
+                 *
+                 * 画面で非表示にしていてもPOST値は書き換え可能なので、
+                 * サーバー側でもチェックする。
+                 */
+                Rule::exists('roles', 'id')->where('is_active', true),
+            ],
             'name' => ['required', 'string', 'max:255'],
             'email' => [
                 'required',

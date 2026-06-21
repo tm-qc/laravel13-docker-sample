@@ -76,6 +76,28 @@
                 @enderror
             </div>
 
+            {{-- ロール --}}
+            {{-- TODO:現状管理者のみ表示。最終的に一般ユーザは表示のみで編集不可がいいかも --}}
+            @can('create', \App\Models\User::class)
+                <div class="form-group">
+                    <label for="role_id" class="form-label">ロール</label>
+
+                    <select id="role_id" name="role_id" class="form-control @error('role_id') is-invalid @enderror">
+                        <option value="">選択してください</option>
+
+                        @foreach ($roles as $role)
+                            <option value="{{ $role->id }}" @selected((string) old('role_id', $user->role_id) === (string) $role->id)>
+                                {{ $role->name }}
+                            </option>
+                        @endforeach
+                    </select>
+
+                    @error('role_id')
+                        <p class="form-error">{{ $message }}</p>
+                    @enderror
+                </div>
+            @endcan
+
             {{-- メールアドレス --}}
             <div class="form-group">
                 <label for="email" class="form-label">
