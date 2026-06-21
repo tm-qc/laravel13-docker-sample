@@ -34,6 +34,7 @@ class UserRepository
         // TODO：複数テーブルの場合はトランザクション利用する
         // 成功したらオブジェクト、失敗したらエラーになる
         return User::create([
+            'role_id' => $data['role_id'],
             'name' => $data['name'],
             'email' => $data['email'],
             // 'password' => Hash::make($data['password']), //UserモデルでHash化するので不要

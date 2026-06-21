@@ -102,8 +102,6 @@ class User extends Authenticatable
      *
      * Policyや画面表示制御で毎回 role.code を直接比較すると、
      * 判定条件があちこちに散らばるため、Userモデルにまとめる。
-     *
-     * TODO:ここに書いて結果をポリシークラスで受け取るのは、仕事や公式ページから見ても本当に一般的なのか？
      * @see https://laravel.com/docs/13.x/authorization#generating-policies
      */
     public function isAdmin(): bool

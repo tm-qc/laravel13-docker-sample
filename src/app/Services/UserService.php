@@ -67,6 +67,7 @@ class UserService
 
             // ユーザ登録のDB操作はRepositoryへ任せる
             return $this->userRepository->create([
+                'role_id' => $validated['role_id'],
                 'name' => $validated['name'],
                 'email' => $validated['email'],
                 'password' => $validated['password'],

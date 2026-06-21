@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UserStoreRequest extends FormRequest
 {
@@ -38,6 +39,16 @@ class UserStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'role_id' => [
+                'required',
+                'integer',
+
+                /**
+                 * rolesテーブルでアクティヴ(使用可能) & 存在するidだけ許可する。
+                 * 不正なrole_idを直接POSTされても登録できないようにする。
+                 */
+                Rule::exists('roles', 'id')->where('is_active', true),
+            ],
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'confirmed', 'min:8'],

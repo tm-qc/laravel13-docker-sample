@@ -37,6 +37,24 @@
             </div>
 
             <div class="form-group">
+                <label for="role_id" class="form-label">ロール</label>
+
+                <select id="role_id" name="role_id" class="form-control @error('role_id') is-invalid @enderror">
+                    <option value="">選択してください</option>
+
+                    @foreach ($roles as $role)
+                        <option value="{{ $role->id }}" @selected((string) old('role_id') === (string) $role->id)>
+                            {{ $role->name }}
+                        </option>
+                    @endforeach
+                </select>
+
+                @error('role_id')
+                    <p class="form-error">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="form-group">
                 <label for="email" class="form-label">メールアドレス</label>
                 <input type="email" id="email" name="email"
                     class="form-control  @error('email') is-invalid @enderror" value="{{ old('email') }}">

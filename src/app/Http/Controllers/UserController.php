@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateRequest;
+use App\Models\Role;
 use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Http\RedirectResponse;
@@ -69,7 +70,17 @@ class UserController extends Controller
             abort(403);
         }
 
-        return view('users.create');
+        /**
+         * ロール選択肢を取得する
+         *
+         * is_active = 1 のロールだけ表示する。
+         * 無効なロールを新規ユーザーに設定できないようにするため。
+        */
+        $roles = Role::where('is_active', true)
+            ->orderBy('id')
+            ->get();
+
+        return view('users.create', compact('roles'));
     }
 
     /**
