@@ -52,13 +52,13 @@ class UserStoreRequest extends FormRequest
             ],
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', 'string', 'confirmed', 'min:8'],
-            'profile' => ['string', 'max:500'],
+            'password' => ['required', 'string', 'confirmed', 'min:' . config('users.password.min_length'),],
+            'profile' => ['string', 'max:' . config('users.profile.max_length')],
             'icon_image' => [
                 'nullable', // 画像未選択の場合はnull扱いになるためnullableを付与
                 'image',
-                'mimes:jpg,jpeg,png,webp',
-                'max:2048',
+                'mimes:' . implode(',', config('users.icon_image.mimes')),
+                'max:' . config('users.icon_image.max_size_kb'),
             ],
         ];
     }

@@ -28,16 +28,16 @@ class UserService
     /**
      * ユーザ一覧をページネーション付きで取得する
      *
-     * @param integer $perPage 表示件数設定値
      * @return LengthAwarePaginator
      */
-    public function getPaginatedUsers(int $perPage = 3): LengthAwarePaginator
+    public function getPaginatedUsers(): LengthAwarePaginator
     {
         // paginate(3)
         // 業務では件数が増える前提なので、all() ではなくページネーションを使う
         //
         // 3件ずつ表示する。
         // ユーザ一覧取得のDB操作はRepositoryへ任せる。
+        $perPage = (int) config('users.pagination.per_page', 3);
         return $this->userRepository->getPaginatedUsers($perPage);
     }
 
@@ -61,7 +61,7 @@ class UserService
                 // - 開発(public)：storage/app/public/users 配下に画像を保存する
                 // - DBには users/xxxx.jpg のような相対パスだけ保存する
                 // - disk指定は .env で public / s3 などを切り替える想定なので省略する
-                $storedPath = $iconImage->store('users');
+                $storedPath = $iconImage->store(config('users.icon_image.directory'));
 
                 // 画像保存に失敗した場合はDB登録せずにエラーにする
                 if ($storedPath === false) {
@@ -155,7 +155,7 @@ class UserService
             // 新しいアイコン画像がアップロードされている場合のみ差し替える
             if ($iconImage !== null) {
 
-                $storedPath = $iconImage->store('users');
+                $storedPath = $iconImage->store(config('users.icon_image.directory'));
 
                 // 画像保存に失敗した場合はDB更新せずにエラーにする
                 if ($storedPath === false) {

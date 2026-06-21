@@ -87,13 +87,13 @@ class UserUpdateRequest extends FormRequest
              * 未入力なら変更しない。
              * 入力された場合だけ、確認用パスワード一致と8文字以上をチェックする。
              */
-            'password' => ['nullable', 'string', 'confirmed', 'min:8'],
-            'profile' => ['string', 'max:500'],
+            'password' => ['nullable', 'string', 'confirmed', 'min:' . config('users.password.min_length'),],
+            'profile' => ['string', 'max:' . config('users.profile.max_length'),],
             'icon_image' => [
                 'nullable',
                 'image',
-                'mimes:jpg,jpeg,png,webp',
-                'max:2048',
+                'mimes:' . implode(',', config('users.icon_image.mimes')),
+                'max:' . config('users.icon_image.max_size_kb'),
             ],
         ];
     }

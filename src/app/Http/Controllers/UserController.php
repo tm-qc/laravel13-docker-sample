@@ -46,7 +46,7 @@ class UserController extends Controller
         }
 
         // ユーザ一覧取得はServiceへ任せる
-        $users = $this->userService->getPaginatedUsers(3);
+        $users = $this->userService->getPaginatedUsers();
 
         // users/index.blade.php にユーザ一覧データを渡して表示する
         return view('users.index', compact('users'));
