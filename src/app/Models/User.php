@@ -34,6 +34,20 @@ class User extends Authenticatable
     use SoftDeletes;
 
     /**
+     * Userを取得するときに常に読み込むリレーション
+     *
+     * role はPolicyや画面表示でよく使うため、
+     * 毎回 with('role') を書かなくてもよいようにする。
+     *
+     * 事前に使うことが分かっているリレーションは with() でEager Loading(事前読み込み)することでSQL回数を減らせる
+     * ※何もしない通常はLazy Loading(遅延読み込み)
+     * @see https://laravel.com/docs/13.x/eloquent-relationships?utm_source=chatgpt.com#eager-loading
+     */
+    protected $with = [
+        'role',
+    ];
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
@@ -80,5 +94,29 @@ class User extends Authenticatable
     public function role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
+    }
+
+
+    /**
+     * Policy：管理者ユーザーか判定する
+     *
+     * Policyや画面表示制御で毎回 role.code を直接比較すると、
+     * 判定条件があちこちに散らばるため、Userモデルにまとめる。
+     *
+     * TODO:ここに書いて結果をポリシークラスで受け取るのは、仕事や公式ページから見ても本当に一般的なのか？
+     * @see https://laravel.com/docs/13.x/authorization#generating-policies
+     */
+    public function isAdmin(): bool
+    {
+        //リレーションで取得した rolesのcodeで判定
+        return $this->role?->code === Role::CODE_ADMIN;
+    }
+
+    /**
+     * 一般ユーザーか判定する
+     */
+    public function isGeneral(): bool
+    {
+        return $this->role?->code === Role::CODE_GENERAL;
     }
 }
