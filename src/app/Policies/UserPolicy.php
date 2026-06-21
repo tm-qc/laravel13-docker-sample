@@ -71,7 +71,7 @@ class UserPolicy
      * 一般:
      * - ユーザー削除できない
      */
-    public function delete(User $user, User $targetUser): bool
+    public function delete(User $user): bool
     {
         return $user->isAdmin();
     }
@@ -82,7 +82,7 @@ class UserPolicy
      * 物理削除は管理者だけ許可する。
      *
      */
-    public function forceDelete(User $user, User $targetUser): bool
+    public function forceDelete(User $user): bool
     {
         return $user->isAdmin();
     }
