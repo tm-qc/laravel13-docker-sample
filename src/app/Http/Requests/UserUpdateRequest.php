@@ -19,7 +19,13 @@ class UserUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        // ルーティングから編集対象ユーザを取得
+        // 管理者かどうか、自分自身かどうかの判定は Policy 側で行う。
+        // 管理者じゃない場合、ポリシーの判定で $targetUser を使うため、ルーティングから取得が必要
+        // ※ 一般ユーザーの場合に「自分自身かどうか」を判定する
+        $targetUser = $this->route('user');
+        return $this->user()?->can('update', $targetUser);
+
     }
 
     /**

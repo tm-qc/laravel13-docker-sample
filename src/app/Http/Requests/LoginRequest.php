@@ -7,7 +7,8 @@ use Illuminate\Foundation\Http\FormRequest;
 class LoginRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * フォームリクエスト実行可否
+     * ※ログイン画面のなので true のままでOK
      */
     public function authorize(): bool
     {

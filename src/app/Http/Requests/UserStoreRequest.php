@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -14,13 +15,11 @@ class UserStoreRequest extends FormRequest
      * true  : 実行許可
      * false : 403エラー
      *
-     * 今回はログイン機能未実装のため true で常に許可
-     *
      * 実装例）
      * - ログインユーザーのみ更新可能にしたいときは、ログイン実装後に以下のようにする
      * return auth()->check();
      *
-     * - 管理者のみ許可
+     * - 管理者のみ許可(ポリシーじゃない場合)
      * return auth()->user()?->is_admin;
      *
      * - 自分のデータだけ更新可能
@@ -28,7 +27,9 @@ class UserStoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        // ユーザー新規登録は管理者のみOK
+        // ※User::classは捜査中のユーザ。編集対象ユーザーがいないときに使う。
+        return $this->user()?->can('create', User::class);
     }
 
     /**
