@@ -156,14 +156,25 @@ class UserController extends Controller
         }
 
         /**
+         * ロール選択肢の初期値
+         *
+         * 一般ユーザーはロールを変更できないため、空のコレクションにする。
+         * TODO：これで一般的か、一般は自分のロールを表示し編集不可にしたいがこれでいいのか確認
+         */
+        $roles = collect();
+
+        /**
          * ロール選択肢を取得する
          *
          * 編集画面でロールを選択できるようにする。
+         * 管理者のみ取得
          * 無効なロールは選択肢に出さない。
          */
-        $roles = Role::where('is_active', true)
-            ->orderBy('id')
-            ->get();
+        if ($request->user()->can('changeRole', User::class)) {
+            $roles = Role::where('is_active', true)
+                ->orderBy('id')
+                ->get();
+        }
 
         return view('users.edit', compact('user', 'roles'));
     }

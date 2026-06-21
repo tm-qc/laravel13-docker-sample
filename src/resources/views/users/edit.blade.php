@@ -20,10 +20,16 @@
                 </p>
             </div>
 
+            @php
+                $loginUser = request()->user();
+            @endphp
+
             {{-- ユーザ一覧画面へ戻るリンク --}}
-            <a href="{{ route('users.index') }}" class="users-page__create-link">
-                ユーザ一覧へ戻る
-            </a>
+            @if ($loginUser !== null && $loginUser->can('viewAny', \App\Models\User::class))
+                <a href="{{ route('users.index') }}" class="users-page__create-link">
+                    ユーザ一覧へ戻る
+                </a>
+            @endif
         </div>
         {{--
             ユーザ更新フォーム
@@ -77,8 +83,8 @@
             </div>
 
             {{-- ロール --}}
-            {{-- TODO:現状管理者のみ表示。最終的に一般ユーザは表示のみで編集不可がいいかも --}}
-            @can('create', \App\Models\User::class)
+            {{-- TODO:現状管理者のみ表示。必要なら一般ユーザは表示のみで編集不可でもいいかもしれない --}}
+            @can('changeRole', \App\Models\User::class)
                 <div class="form-group">
                     <label for="role_id" class="form-label">ロール</label>
 
@@ -154,16 +160,17 @@
             </div>
         </form>
 
-        {{-- 論理削除フォーム --}}
-        <form action="{{ route('users.soft-destroy', $user) }}" method="POST" class="delete-form">
-            @csrf
-            @method('DELETE')
+        @can('delete', $user)
+            {{-- 論理削除フォーム --}}
+            <form action="{{ route('users.soft-destroy', $user) }}" method="POST" class="delete-form">
+                @csrf
+                @method('DELETE')
 
-            <button type="submit" class="button-danger" onclick="return confirm('このユーザーを論理削除しますか？\nDBにはデータが残ります。');">
-                論理削除する
-            </button>
-        </form>
-
+                <button type="submit" class="button-danger" onclick="return confirm('このユーザーを論理削除しますか？\nDBにはデータが残ります。');">
+                    論理削除する
+                </button>
+            </form>
+        @endcan
 
         {{--
             ユーザ物理削除フォーム
@@ -178,14 +185,16 @@
             @method('DELETE'):
             Laravel側に「このPOSTはDELETEとして扱ってください」と指示
         --}}
-        <form action="{{ route('users.force-destroy', $user) }}" method="POST" class="delete-form"
-            onsubmit="return confirm('本当にこのユーザーを物理削除しますか？この操作は元に戻せません。');">
-            @csrf
-            @method('DELETE')
+        @can('forceDelete', $user)
+            <form action="{{ route('users.force-destroy', $user) }}" method="POST" class="delete-form"
+                onsubmit="return confirm('本当にこのユーザーを物理削除しますか？この操作は元に戻せません。');">
+                @csrf
+                @method('DELETE')
 
-            <button type="submit" class="button-danger">
-                物理削除する
-            </button>
-        </form>
+                <button type="submit" class="button-danger">
+                    物理削除する
+                </button>
+            </form>
+        @endcan
     </div>
 @endsection
