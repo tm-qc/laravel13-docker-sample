@@ -7,6 +7,7 @@ use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class UserController extends Controller
@@ -24,9 +25,26 @@ class UserController extends Controller
 
     /**
      * 一覧画面を表示する
+     *
+     * @param Request $request 利用ユーザー情報 + リクエスト値
+     * @return View
      */
-    public function index(): View
+    public function index(Request $request): View
     {
+        /**
+         * 認可チェック
+         *
+         * $request->user():ログイン中ユーザー
+         *
+         * cannot('viewAny', User::class):UserPolicy の viewAny() を呼び出す。
+         *
+         * 今回の仕様では、ユーザー一覧を表示できるのは管理者だけ
+         * 引数 User::class について：今回は表示権限の確認で、編集など特定の個別ユーザはいないので、参照するPolicy特定のためにUserクラスを渡す
+         */
+        if ($request->user()->cannot('viewAny', User::class)) {
+            abort(403);
+        }
+
         // ユーザ一覧取得はServiceへ任せる
         $users = $this->userService->getPaginatedUsers(3);
 
@@ -36,17 +54,44 @@ class UserController extends Controller
 
     /**
      * 登録画面を表示する
+     *
+     * @param Request $request 利用ユーザー情報 + リクエスト値
+     * @return View
      */
-    public function create(): View
+    public function create(Request $request): View
     {
+        /**
+         * 認可チェック
+         *
+         * 管理者のみ参照可能
+        */
+        if ($request->user()->cannot('create', User::class)) {
+            abort(403);
+        }
+
         return view('users.create');
     }
 
     /**
      * 新規登録する
+     *
+     * @param UserStoreRequest $request 利用ユーザー情報 + バリデーション + リクエスト値
+     * @return RedirectResponse
      */
     public function store(UserStoreRequest $request): RedirectResponse
     {
+        /**
+         * 認可チェック
+         *
+         * 管理者のみユーザ登録可能
+         *
+         * try の外に書く理由:
+         * 認可NGは登録処理の失敗ではなく、アクセス権限なしとして403で止めるため。
+        */
+        if ($request->user()->cannot('create', User::class)) {
+            abort(403);
+        }
+
         try {
             // フォームリクエストからバリデーション済みデータを取得
             $validated = $request->validated();
@@ -82,17 +127,49 @@ class UserController extends Controller
 
     /**
      * 編集画面を表示する
+     *
+     * @param Request $request 利用ユーザー情報 + リクエスト値
+     * @param User $user 編集対象ユーザー
+     *                   ルートモデルバインディングにより、URLの users/{user} から取得される。
+     * @return View
      */
-    public function edit(User $user): View
+    public function edit(Request $request, User $user): View
     {
+        /**
+         * 認可チェック
+         *
+         * - 管理者は全ユーザーを編集できる
+         * - 一般ユーザーは自分自身だけ編集できる
+        */
+        if ($request->user()->cannot('update', $user)) {
+            abort(403);
+        }
+
         return view('users.edit', compact('user'));
     }
 
     /**
      * 更新する
+     *
+     * @param UserUpdateRequest $request 利用ユーザー情報 + バリデーション + リクエスト値
+     * @param User $user 編集対象ユーザー
+     *                   ルートモデルバインディングにより、URLの users/{user} から取得される。
+     * @return RedirectResponse
      */
     public function update(UserUpdateRequest $request, User $user): RedirectResponse
     {
+        /**
+         * 認可チェック
+         *
+         * - 管理者は全ユーザーを更新できる
+         * - 一般ユーザーは自分自身だけ更新できる
+         *
+         * try の外に書く理由:認可NGは更新処理の失敗ではなく、アクセス権限なしとして403で止めるため。
+         */
+        if ($request->user()->cannot('update', $user)) {
+            abort(403);
+        }
+
         try {
             // フォームリクエストからバリデーション済みデータを取得
             $validated = $request->validated();
@@ -127,9 +204,29 @@ class UserController extends Controller
 
     /**
      * ユーザーを論理削除する
+     *
+     * @param Request $request 利用ユーザー情報 + リクエスト値
+     * @param User $user 編集対象ユーザー
+     *                   ルートモデルバインディングにより、URLの users/{user} から取得される。
+     * @return RedirectResponse
      */
-    public function softDestroy(User $user): RedirectResponse
+    public function softDestroy(Request $request, User $user): RedirectResponse
     {
+        /**
+         * 認可チェック
+         *
+         * - 管理者だけユーザー削除できる
+         * - 一般ユーザーは削除できない
+         *
+         * SoftDeleteを使っているため、
+         * ここでの delete は論理削除の認可として扱う。
+         *
+         * try の外に書く理由:認可NGは削除処理の失敗ではなく、アクセス権限なしとして403で止めるため。
+         */
+        if ($request->user()->cannot('delete', $user)) {
+            abort(403);
+        }
+
         try {
             // Serviceに論理削除処理を依頼する。
             $this->userService->softDeleteUser($user);
@@ -152,9 +249,30 @@ class UserController extends Controller
 
     /**
      * 物理削除する
+     *
+     * @param Request $request 利用ユーザー情報 + リクエスト値
+     * @param User $user 編集対象ユーザー
+     *                   ルートモデルバインディングにより、URLの users/{user} から取得される。
+     * @return RedirectResponse
      */
-    public function forceDestroy(User $user): RedirectResponse
+    public function forceDestroy(Request $request, User $user): RedirectResponse
     {
+
+        /**
+         * 認可チェック
+         *
+         * - 管理者だけユーザー削除できる
+         * - 一般ユーザーは削除できない
+         *
+         * SoftDeleteを使っているため、
+         * forceDelete はDBから完全に削除する物理削除の認可として扱う。
+         *
+         * try の外に書く理由：認可NGは削除処理の失敗ではなく、アクセス権限なしとして403で止めるため。
+        */
+        if ($request->user()->cannot('forceDelete', $user)) {
+            abort(403);
+        }
+
         try {
             $this->userService->forceDeleteUser($user);
 
