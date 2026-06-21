@@ -257,13 +257,13 @@ class UserController extends Controller
              */
             return redirect()
                 ->route('users.index')
-                ->with('success', 'ユーザーを論理削除しました。');
+                ->with('success', __('messages.users.soft_delete.success'));
 
         } catch (\Throwable $e) {
 
             return redirect()
                 ->route('users.edit', $user)
-                ->with('error', 'ユーザーの論理削除に失敗しました。');
+                ->with('error', __('messages.users.soft_delete.error'));
         }
     }
 
@@ -298,13 +298,13 @@ class UserController extends Controller
 
             return redirect()
                 ->route('users.index')
-                ->with('success', 'ユーザを物理削除しました。');
+                ->with('success', __('messages.users.force_delete.success'));
 
         } catch (\Throwable $e) {
 
             return redirect()
                 ->route('users.edit', $user)
-                ->with('error', 'ユーザの物理削除に失敗しました。');
+                ->with('error', __('messages.users.force_delete.error'));
         }
     }
 }

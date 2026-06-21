@@ -59,13 +59,13 @@ class LoginController extends Controller
              */
             return redirect()
                 ->intended(route('top'))
-                ->with('success', 'ログインしました。');
+                ->with('success', __('auth.login.success'));
         }
 
         // ログイン失敗時
         return back()
             ->withErrors([
-                'email' => 'メールアドレスまたはパスワードが正しくありません。',
+                'email' => __('auth.failed'),
             ])
             ->onlyInput('email');//入力値を残すoldと同じような役割
     }
@@ -84,6 +84,6 @@ class LoginController extends Controller
 
         return redirect()
             ->route('login')
-            ->with('success', 'ログアウトしました。');
+            ->with('success', __('auth.logout.success'));
     }
 }

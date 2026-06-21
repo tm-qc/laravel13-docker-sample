@@ -216,7 +216,7 @@ class UserService
         } catch (\Throwable $e) {
             // エラーログ出力
             // 出力先：storage/logs/laravel.log
-            Log::error('ユーザ論理削除エラー', [
+            Log::error('ユーザー論理削除エラー', [
                 'user_id' => $targetUser->id,
                 'message' => $e->getMessage(),
                 'file' => $e->getFile(),
@@ -249,7 +249,7 @@ class UserService
         } catch (\Throwable $e) {
             // エラーログ出力
             // 出力先：storage/logs/laravel.log
-            Log::error('ユーザ物理削除エラー', [
+            Log::error('ユーザー物理削除エラー', [
                 'user_id' => $targetUser->id,
                 'message' => $e->getMessage(),
                 'file' => $e->getFile(),
@@ -289,13 +289,13 @@ class UserService
             $iconImageDeleted = Storage::delete($iconImagePath);
 
             if (! $iconImageDeleted) {
-                Log::warning('ユーザ削除後のアイコン画像削除に失敗しました。', [
+                Log::warning('ユーザー削除後のアイコン画像削除に失敗しました。', [
                     'user_id' => $userId,
                     'icon_image_path' => $iconImagePath,
                 ]);
             }
         } catch (\Throwable $e) {
-            Log::warning('ユーザ削除後のアイコン画像削除で例外が発生しました。', [
+            Log::warning('ユーザー削除後のアイコン画像削除で例外が発生しました。', [
                 'user_id' => $userId,
                 'icon_image_path' => $iconImagePath,
                 'message' => $e->getMessage(),
