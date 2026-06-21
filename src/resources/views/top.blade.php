@@ -21,15 +21,21 @@
         </p>
 
         <div class="top-menu-list">
-            <a href="{{ route('users.index') }}" class="top-menu-item">
-                <h2>ユーザー一覧</h2>
-                <p>登録済みユーザーを確認します</p>
-            </a>
+            {{-- src/app/Policies/UserPolicy.php のポリシーで表示制御 --}}
+            @can('viewAny', \App\Models\User::class)
+                <a href="{{ route('users.index') }}" class="top-menu-item">
+                    <h2>ユーザー一覧</h2>
+                    <p>登録済みユーザーを確認します</p>
+                </a>
+            @endcan
 
-            <a href="{{ route('users.create') }}" class="top-menu-item">
-                <h2>ユーザー登録</h2>
-                <p>新しいユーザーを登録します</p>
-            </a>
+            {{-- src/app/Policies/UserPolicy.php のポリシーで表示制御 --}}
+            @can('create', \App\Models\User::class)
+                <a href="{{ route('users.create') }}" class="top-menu-item">
+                    <h2>ユーザー登録</h2>
+                    <p>新しいユーザーを登録します</p>
+                </a>
+            @endcan
         </div>
     </div>
 @endsection
