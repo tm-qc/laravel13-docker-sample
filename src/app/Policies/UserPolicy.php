@@ -4,6 +4,12 @@ namespace App\Policies;
 
 use App\Models\User;
 
+/**
+ * ポリシーメモ
+ *
+ * ポリシーはここで制限つけても各所に適用が必要になるため、
+ * ロール追加 → 制御追加はコード改修ベースで行うことになりそう
+*/
 class UserPolicy
 {
     /**
