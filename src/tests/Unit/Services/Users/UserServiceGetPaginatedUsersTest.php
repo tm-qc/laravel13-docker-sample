@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Services;
+namespace Tests\Unit\Services\Users;
 
 use App\Repositories\UserRepository;
 use App\Services\UserService;
@@ -28,7 +28,7 @@ use Tests\TestCase;
 /**
  * ユーザー一覧取得のテスト
  */
-class UserServiceTest extends TestCase
+class UserServiceGetPaginatedUsersTest extends TestCase
 {
     /**
      * テスト後の後片付け
