@@ -28,14 +28,24 @@ FROM php:8.5.6-fpm
 # libzip-dev
 #   PHPのzip拡張をインストールするために必要
 #
+# libonig-dev
+#   PHPのmbstring拡張をインストールするために必要
+#
+# libpng-dev / libjpeg-dev / libwebp-dev / libfreetype6-dev
+#   PHPのgd拡張をインストールするために必要
+#   画像アップロードのテストで UploadedFile::fake()->image() を使う場合にも必要
+#
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
     zip \
     curl \
     libzip-dev \
-    libonig-dev
-
+    libonig-dev \
+    libpng-dev \
+    libjpeg-dev \
+    libwebp-dev \
+    libfreetype6-dev
 
 
 # ==========================================
@@ -55,11 +65,20 @@ RUN apt-get update && apt-get install -y \
 #   小数計算を正確に行うために必要
 #   金額計算などで利用
 #
-RUN docker-php-ext-install \
+# gd
+#   PHPで画像を扱うために必要
+#   UploadedFile::fake()->image() でテスト用画像を生成する場合にも必要
+#
+RUN docker-php-ext-configure gd \
+    --with-jpeg \
+    --with-webp \
+    --with-freetype \
+    && docker-php-ext-install \
     pdo_mysql \
     zip \
     mbstring \
-    bcmath
+    bcmath \
+    gd
 
 # ==========================================
 # Xdebug導入
