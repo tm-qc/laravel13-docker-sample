@@ -65,7 +65,7 @@ class UserService
 
                 // 画像保存に失敗した場合はDB登録せずにエラーにする
                 if ($storedPath === false) {
-                    throw new RuntimeException('画像の保存に失敗しました。');
+                    throw new RuntimeException(__('messages.users.exceptions.icon_store_failed'));
                 }
 
                 //画像保存成功ならパスを保持
@@ -93,7 +93,10 @@ class UserService
 
             // エラーログ出力
             // 出力先：storage/logs/laravel.log
-            Log::error('ユーザー登録エラー', [
+            $messageKey = 'messages.users.logs.create_failed';
+            Log::error(__($messageKey), [
+                'event_id' => 'USER-001', // 設計書などでユニーク管理して探しやすくする
+                'message_key' => $messageKey,
                 'message' => $e->getMessage(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
@@ -159,7 +162,7 @@ class UserService
 
                 // 画像保存に失敗した場合はDB更新せずにエラーにする
                 if ($storedPath === false) {
-                    throw new RuntimeException('画像の保存に失敗しました。');
+                    throw new RuntimeException(__('messages.users.exceptions.icon_store_failed'));
                 }
 
                 // 新しい画像パスを保持する
@@ -189,8 +192,10 @@ class UserService
 
             // エラーログ出力
             // 出力先：storage/logs/laravel.log
-            Log::error('ユーザ更新エラー', [
-                'user_id' => $targetUser->id,
+            $messageKey = 'messages.users.logs.update_failed';
+            Log::error(__($messageKey), [
+                'event_id' => 'USER-002',
+                'message_key' => $messageKey,
                 'message' => $e->getMessage(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
@@ -216,8 +221,10 @@ class UserService
         } catch (\Throwable $e) {
             // エラーログ出力
             // 出力先：storage/logs/laravel.log
-            Log::error('ユーザー論理削除エラー', [
-                'user_id' => $targetUser->id,
+            $messageKey = 'messages.users.logs.soft_delete_failed';
+            Log::error(__($messageKey), [
+                'event_id' => 'USER-003',
+                'message_key' => $messageKey,
                 'message' => $e->getMessage(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
@@ -227,7 +234,7 @@ class UserService
              * Controller側でユーザー向けメッセージを出しやすいように、
              * Serviceでは業務処理失敗として例外を投げ直す。
              */
-            throw new RuntimeException('ユーザーの論理削除に失敗しました。', 0, $e);
+            throw new RuntimeException(__('messages.users.exceptions.soft_delete_failed'), 0, $e);
         }
     }
 
@@ -249,8 +256,10 @@ class UserService
         } catch (\Throwable $e) {
             // エラーログ出力
             // 出力先：storage/logs/laravel.log
-            Log::error('ユーザー物理削除エラー', [
-                'user_id' => $targetUser->id,
+            $messageKey = 'messages.users.logs.force_delete_failed';
+            Log::error(__($messageKey), [
+                'event_id' => 'USER-004',
+                'message_key' => $messageKey,
                 'message' => $e->getMessage(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
@@ -289,15 +298,19 @@ class UserService
             $iconImageDeleted = Storage::delete($iconImagePath);
 
             if (! $iconImageDeleted) {
-                Log::warning('ユーザー削除後のアイコン画像削除に失敗しました。', [
+                $messageKey = 'messages.users.logs.icon_delete_failed';
+                Log::error(__($messageKey), [
+                    'event_id' => 'USER-005',
+                    'message_key' => $messageKey,
                     'user_id' => $userId,
                     'icon_image_path' => $iconImagePath,
                 ]);
             }
         } catch (\Throwable $e) {
-            Log::warning('ユーザー削除後のアイコン画像削除で例外が発生しました。', [
-                'user_id' => $userId,
-                'icon_image_path' => $iconImagePath,
+            $messageKey = 'messages.users.logs.icon_delete_exception';
+            Log::error(__($messageKey), [
+                'event_id' => 'USER-006',
+                'message_key' => $messageKey,
                 'message' => $e->getMessage(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
