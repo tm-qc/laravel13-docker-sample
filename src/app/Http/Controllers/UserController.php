@@ -159,7 +159,6 @@ class UserController extends Controller
          * ロール選択肢の初期値
          *
          * 一般ユーザーはロールを変更できないため、空のコレクションにする。
-         * TODO：これで一般的か、一般は自分のロールを表示し編集不可にしたいがこれでいいのか確認
          */
         $roles = collect();
 
