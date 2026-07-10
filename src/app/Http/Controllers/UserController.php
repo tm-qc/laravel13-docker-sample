@@ -130,10 +130,10 @@ class UserController extends Controller
     /**
      * 詳細画面を表示する
      */
-    public function show(string $id)
-    {
-        //
-    }
+    // public function show(string $id)
+    // {
+    //     //
+    // }
 
     /**
      * 編集画面を表示する

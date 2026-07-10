@@ -82,15 +82,18 @@ Route::middleware('auth')->group(function () {
      * index   GET    /users
      * create  GET    /users/create
      * store   POST   /users
-     * show    GET    /users/{user}
+     * show    GET    /users/{user} ※今は未使用：only でルートに含めないようにする
      * edit    GET    /users/{user}/edit
      * update  PUT    /users/{user}
-     * destroy DELETE /users/{user}
+     * destroy DELETE /users/{user} ※今は未使用：only でルートに含めないようにする
      *
      * 確認
      * php artisan route:list
      */
-    Route::resource('users', UserController::class);
+    Route::resource('users', UserController::class)
+    // only:ルートに含めるアクションを指定する
+    // (ルートに使うものだけ指定して、使ってないアクション、不要に追加されるようなアクションを含めないようにする)
+    ->only(['index', 'create', 'store', 'edit', 'update']);
 
     // ユーザーを論理削除する
     Route::delete('/users/{user}/soft-delete', [UserController::class, 'softDestroy'])
